@@ -23,16 +23,17 @@ app.get("*", (req, res) => {
 });
 
 app.post("/api/notes", (req, res) => {
-  const parseN = JSON.parse(fs.readFileSync("./db/db.json", "utf8"));
+  const parseN = JSON.parse(fs.readFileSync('./db/db.json', 'utf8'));
   const newNote = req.body;
   newNote.id = uuidv4();
   parseN.push(newNote);
-  fs.writeFile(
-    "./db/db.json",
+  fs.writeFileSync(
+    './db/db.json',
     JSON.stringify(parseN, null, 2),
 
     (err) => (err ? console.error(err) : console.log("notes were updated"))
   );
+  return;
 });
 
 app.listen(PORT, () => console.log(`listening at http://localhost:${PORT}`));
