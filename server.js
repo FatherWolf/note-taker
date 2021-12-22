@@ -10,38 +10,29 @@ app.use(express.static("public"));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-app.get("/notes", (req, res) =>
-  res.sendFile(path.join(__dirname, "public/notes.html"))
-);
-app.get("*", (req, res) =>
-  res.sendFile(path.join(__dirname, "public/index.html"))
-);
-app.get("/api/notes", (req, res) => res.sendFile(path.join(__dirname, "db")));
+app.get("/notes", (req, res) => {
+  res.sendFile(path.join(__dirname, "public/notes.html"));
+});
 
-app.listen(PORT, () =>
-  console.log(`App listening at http://localhost:${PORT}`)
-);
+app.get("/api/notes", (req, res) => {
+  res.sendFile(path.join(__dirname, "db/db.json"));
+});
+
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "public/index.html"));
+});
 
 app.post("/api/notes", (req, res) => {
-  const notes = JSON.parse(fs.readFileSync("./db/db.json", "utf8"));
+  const parseN = JSON.parse(fs.readFileSync("./db/db.json", "utf8"));
   const newNote = req.body;
   newNote.id = uuidv4();
-  notes.push(newNote);
-  fs.writeFileSync("./db/db.json", JSON.stringify(notes, null, 2));
-  res.json(notes);
-  console.log(`Note saved\n ${JSON.stringify(newNote, null, 2)}`);
-});
+  parseN.push(newNote);
+  fs.writeFile(
+    "./db/db.json",
+    JSON.stringify(parseN, null, 2),
 
-app.delete("/api/notes/:id", (req, res) => {
-  const notes = JSON.parse(fs.readFileSync("./db/db.json", "utf8"));
-  const noteId = req.params.id;
-  const removedNote = notes.splice(
-    notes.findIndex((e) => e.id === noteId),
-    1
+    (err) => (err ? console.error(err) : console.log("notes were updated"))
   );
-  fs.writeFileSync("./db/db.json", JSON.stringify(notes, null, 2));
-  res.json(notes);
-  console.log(`Note deleted\n ${JSON.stringify(removedNote, null, 2)}`);
 });
 
-app.listen(PORT, () => console.log(`App @ http://localhost:${PORT} 🚀🌑`));
+app.listen(PORT, () => console.log(`listening at http://localhost:${PORT}`));
