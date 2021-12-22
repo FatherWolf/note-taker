@@ -31,4 +31,4 @@ Me and this course for teaching me this information.
 
 
 [Repo](https://github.com/FatherWolf/note-taker)
-[NoteTaker](https://jacobotaylor.github.io/band-weather-app/)
+[NoteTaker](https://note13taker.herokuapp.com/)
